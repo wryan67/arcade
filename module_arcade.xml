@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_arcade" default="compile.module.arcade">
+  <dirname property="module.arcade.basedir" file="${ant.file.module_arcade}"/>
+  
+  <property name="module.jdk.home.arcade" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.arcade" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.arcade" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.arcade" value="-encoding windows-1252 -source 1.7 ${compiler.args}"/>
+  
+  <property name="arcade.output.dir" value="${module.arcade.basedir}/out/production/arcade"/>
+  <property name="arcade.testoutput.dir" value="${module.arcade.basedir}/out/test/arcade"/>
+  
+  <path id="arcade.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="arcade.module.production.classpath">
+    <path refid="${module.jdk.classpath.arcade}"/>
+  </path>
+  
+  <path id="arcade.runtime.production.module.classpath">
+    <pathelement location="${arcade.output.dir}"/>
+  </path>
+  
+  <path id="arcade.module.classpath">
+    <path refid="${module.jdk.classpath.arcade}"/>
+    <pathelement location="${arcade.output.dir}"/>
+  </path>
+  
+  <path id="arcade.runtime.module.classpath">
+    <pathelement location="${arcade.testoutput.dir}"/>
+    <pathelement location="${arcade.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.arcade">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.arcade">
+    <patternset refid="excluded.from.module.arcade"/>
+  </patternset>
+  
+  <path id="arcade.module.sourcepath">
+    <dirset dir="${module.arcade.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.arcade" depends="compile.module.arcade.production,compile.module.arcade.tests" description="Compile module arcade"/>
+  
+  <target name="compile.module.arcade.production" depends="register.custom.compilers" description="Compile module arcade; production classes">
+    <mkdir dir="${arcade.output.dir}"/>
+    <javac2 destdir="${arcade.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.arcade}/javac">
+      <compilerarg line="${compiler.args.arcade}"/>
+      <bootclasspath refid="arcade.module.bootclasspath"/>
+      <classpath refid="arcade.module.production.classpath"/>
+      <src refid="arcade.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.arcade"/>
+    </javac2>
+    
+    <copy todir="${arcade.output.dir}">
+      <fileset dir="${module.arcade.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.arcade.tests" depends="register.custom.compilers,compile.module.arcade.production" description="compile module arcade; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.arcade" description="cleanup module">
+    <delete dir="${arcade.output.dir}"/>
+    <delete dir="${arcade.testoutput.dir}"/>
+  </target>
+</project>

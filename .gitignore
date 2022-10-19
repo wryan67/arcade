@@ -1,0 +1,15 @@
+.idea/
+**/logs
+**/target/
+**/images/backup/
+**/*.iml
+**/*.tmp
+**/*.old
+**/.*.swp
+**/dependency-reduced-pom.xml
+**/bin/
+scripts/*.log
+data/**
+hs_err*.log
+local
+nohup.out
